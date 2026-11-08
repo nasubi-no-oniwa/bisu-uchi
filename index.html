@@ -449,7 +449,10 @@ function showResult(kind){mode='result';mT=0;resKind=kind;show('result');hudOn(f
 $('againBtn').onclick=()=>{ac();begin();};
 $('rTop').onclick=()=>showTitle();
 function postText(){return (resKind==='ruler'?t('postRuler'):t('post',{n:G.n,s:fs2(G.iv),g:grade(G.n)}))+'\n'+t('tags');}
-$('xBtn').onclick=()=>{const u='https://x.com/intent/post?text='+encodeURIComponent(postText())+'&url='+encodeURIComponent(GAME_URL);const w=window.open(u,'_blank');if(!w)location.href=u;};
+// 結果ごとのページ（s/本数.html）。リンクに「〇本打てた」の画像が出て、人が開くとゲームへ移る
+const SHARE_MAX=300,SHARE_PLUS=[300,400,500,700,1000,1500,2000,3000,5000,10000];
+function shareURL(){if(resKind==='ruler')return GAME_URL+'s/ruler.html';const n=Math.max(0,G.n|0);if(n<=SHARE_MAX)return GAME_URL+'s/'+n+'.html';let m=SHARE_PLUS[0];for(const k of SHARE_PLUS)if(n>=k)m=k;return GAME_URL+'s/'+m+'p.html';}
+$('xBtn').onclick=()=>{const u='https://x.com/intent/post?text='+encodeURIComponent(postText())+'&url='+encodeURIComponent(shareURL());const w=window.open(u,'_blank');if(!w)location.href=u;};
 
 // ===== ランキング（Firebase：ft-green の bisu の下） =====
 const FB={apiKey:'AIzaSyCfCUAY7vhCFVF58tGOQzLCQsfPhp-Qi1A',databaseURL:'https://ft-green-default-rtdb.asia-southeast1.firebasedatabase.app'};
