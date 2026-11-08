@@ -391,10 +391,10 @@ function resetRun(){clearScrews();G={hits:[],iv:0,n:0,ticket:null};const x0=Math
 function begin(){show(null);hudOn(true);btnOn(true);big('');showBest();resetRun();startWait();}
 function startWait(){mode='wait';mT=0;cap(t('wait'),true);rulerReset();}
 // 打つ
-function hit(ts){if(mode==='wait'){G.hits=[ts];G.n=1;G.ticket=takeTicket();drive(toolXT,false);setN(1);mode='base';mT=0;cap(t('base'),true);return;}
+function hit(ts){if(mode==='wait'){G.hits=[ts];G.n=1;G.ticket=ticketFor();drive(toolXT,false);setN(1);mode='base';mT=0;cap(t('base'),true);return;}
  if(mode==='base'){const iv=ts-G.hits[0];
   if(iv<IV_MIN){big(t('tooShort')+'<small>'+esc(t('tooShortN'))+'</small>');sBad();setTimeout(()=>{if(mode==='wait')big('');},1400);resetRun();startWait();return;}
-  G.iv=Math.round(iv);G.hits.push(ts);G.n=2;G.lastX=G.firstX+S;drive(G.lastX,false);setN(2);mode='play';mT=0;cap(t('go'),true);capT=2.2;
+  G.iv=Math.round(iv);G.hits.push(ts);G.n=2;G.lastX=G.firstX+S;drive(G.lastX,false);setN(2);mode='play';if(lastTicket)lastTicket.used=true;mT=0;cap(t('go'),true);capT=2.2;
   $('hudIv').textContent=t('iv',{s:fs2(G.iv)});$('gauge').hidden=false;$('gMark').style.left='50%';$('hudErr').textContent='';return;}
  if(mode==='play'){const prev=G.hits[G.hits.length-1];const d=ts-prev,e=d-G.iv;const x=G.lastX+S*(d/G.iv);
   if(Math.abs(e)>TOL){fail(e,x);return;}
@@ -463,8 +463,11 @@ const FB={apiKey:'AIzaSyCfCUAY7vhCFVF58tGOQzLCQsfPhp-Qi1A',databaseURL:'https://
 const NG=['ちんこ','ちんぽ','まんこ','せっくす','セックス','きんたま','レイプ','死ね','しね','殺す','ころす','ガイジ','キチガイ','きちがい','ニガー','チョン','支那','fuck','shit','bitch','cunt','dick','pussy','nigger','nigga','faggot','retard','whore','slut','rape','porn','nazi','hitler','씨발','시발','병신','좆','肏','屄','屌','幹你','操你','婊子'];
 const badName=s=>{const n=s.normalize('NFKC').toLowerCase().replace(/[\s・._\-ー〜~!！?？*＊]/g,'');return NG.some(w=>n.includes(w.normalize('NFKC').toLowerCase()));};
 async function fetchR(url,opt){let err;for(let i=0;i<3;i++){try{return await fetch(url,opt);}catch(e){err=e;await new Promise(r=>setTimeout(r,500*(i+1)));}}throw err;}
-async function fbAuth(){if(PV)throw new Error('pv');
- let a=ls.get('bu_auth',null);if(a&&a.exp>Date.now()+60000)return a;
+let AUTH=null,authP=null;
+function fbAuth(){if(PV)return Promise.reject(new Error('pv'));if(AUTH&&AUTH.exp>Date.now()+60000)return Promise.resolve(AUTH);
+ if(!authP)authP=fbAuth0().then(a=>{AUTH=a;authP=null;return a;},e=>{authP=null;throw e;});return authP;}
+async function fbAuth0(){
+ let a=AUTH||ls.get('bu_auth',null);if(a&&a.exp>Date.now()+60000)return a;
  if(a&&a.refresh){try{const r=await fetchR('https://securetoken.googleapis.com/v1/token?key='+FB.apiKey,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=refresh_token&refresh_token='+encodeURIComponent(a.refresh)});
   if(r.ok){const j=await r.json();a={uid:j.user_id,token:j.id_token,refresh:j.refresh_token,exp:Date.now()+(+j.expires_in)*1000};ls.set('bu_auth',a);return a;}}catch(_){}}
  const r=await fetchR('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='+FB.apiKey,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({returnSecureToken:true})});
@@ -475,8 +478,13 @@ const QA=a=>'.json?auth='+encodeURIComponent(a.token);
 const PUT=(url,body)=>fetchR(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
 // ずる対策：1本目を打った瞬間にサーバーの時計を書く。記録はその時刻から「本数×間隔」の時間が実際にたっていないと載らない
 function takeTicket(){if(PV)return Promise.resolve(Date.now());
- return (async()=>{const a=await fbAuth();const r=await PUT(DB('runs/'+a.uid)+QA(a),{t:{'.sv':'timestamp'}});if(!r.ok)throw new Error('ticket '+r.status);
-  const j=await r.json();let st=j&&j.t;if(typeof st!=='number'){const g=await fetchR(DB('runs/'+a.uid+'/t')+QA(a));st=await g.json();}return typeof st==='number'?st:null;})().catch(e=>{console.warn(e);return null;});}
+ const once=async()=>{const a=await fbAuth();const r=await PUT(DB('runs/'+a.uid)+QA(a),{t:{'.sv':'timestamp'}});if(!r.ok)throw new Error('ticket '+r.status);
+  const j=await r.json();let st=j&&j.t;if(typeof st!=='number'){const g=await fetchR(DB('runs/'+a.uid+'/t')+QA(a));st=await g.json();}if(typeof st!=='number')throw new Error('ticket t');return st;};
+ return (async()=>{const wait=[700,1500,2200,3000,5000];for(let i=0;;i++){try{return await once();}catch(e){console.warn(e);if(i>=wait.length)return null;await new Promise(r=>setTimeout(r,wait[i]));}}})();}
+// 1本目を打ったとき。「短すぎる・長すぎる」でやりなおした直後（20秒以内）なら、そのときの時刻を使いまわす
+// （前は、2秒以内に打ちなおすとサーバーが新しい時刻をはじいて、その回が記録されなかった）
+let lastTicket=null;
+function ticketFor(){const now=performance.now();if(lastTicket&&!lastTicket.used&&now-lastTicket.at<20000)return lastTicket.p;lastTicket={p:takeTicket(),at:now,used:false};return lastTicket.p;}
 const dayKey=ms=>Math.floor((ms+32400000)/86400000);
 const DS=1000000,TOPN=100; // 今日の並び順 ds = 日×1000000＋本数。ランキングは上位100人だけ読む
 let sendState={};
