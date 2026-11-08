@@ -419,13 +419,17 @@ let drag=null,hbDX=0;
 function rulerVis(){const k=clamp((Math.abs(hbDX)-14)/60,0,1);const r=$('rulerBtn');r.style.opacity=k;r.style.pointerEvents=k>.7?'auto':'none';}
 function rulerReset(){hbDX=0;$('hitBtn').style.transform='';rulerVis();}
 const HB=$('hitBtn');
+// 1本目も押した瞬間に打つ（前は離したときに音と動きが出ていたので、それに合わせると2本目からが必ず早くなっていた）
+// 押したまま横にずらしはじめたら、いま打った1本目はなかったことにして「定規を使う」を出す
 HB.addEventListener('pointerdown',e=>{e.preventDefault();ac();HB.classList.add('down');
- if(mode==='wait'){drag={id:e.pointerId,x0:e.clientX-hbDX,ts:e.timeStamp,moved:false,start:hbDX};try{HB.setPointerCapture(e.pointerId);}catch(_){}return;}
+ if(mode==='wait'){drag={id:e.pointerId,x0:e.clientX-hbDX,moved:false,start:hbDX};try{HB.setPointerCapture(e.pointerId);}catch(_){}hit(e.timeStamp);return;}
  if(mode==='base'||mode==='play')hit(e.timeStamp);});
-HB.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const dx=e.clientX-drag.x0;if(Math.abs(dx-drag.start)>10)drag.moved=true;if(drag.moved){hbDX=clamp(dx,-120,120);HB.style.transform='translateX('+hbDX+'px)';rulerVis();}});
+HB.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const dx=e.clientX-drag.x0;
+ if(!drag.moved&&Math.abs(dx-drag.start)>22){drag.moved=true;if(mode==='base'&&G.n===1){resetRun();startWait();}}
+ if(drag.moved&&mode==='wait'){hbDX=clamp(dx,-120,120);HB.style.transform='translateX('+hbDX+'px)';rulerVis();}});
 function upH(e){HB.classList.remove('down');if(!drag||e.pointerId!==drag.id)return;const d=drag;drag=null;
- if(d.moved){if(Math.abs(hbDX)<70)rulerReset();return;}
- if(mode==='wait'){rulerReset();hit(d.ts);}}
+ if(d.moved){if(mode==='wait'&&Math.abs(hbDX)>=70)return;rulerReset();return;}
+ if(hbDX!==0)rulerReset();}
 HB.addEventListener('pointerup',upH);HB.addEventListener('pointercancel',e=>{HB.classList.remove('down');drag=null;});
 addEventListener('keydown',e=>{if(e.repeat)return;if((e.code==='Space'||e.code==='Enter')&&(mode==='wait'||mode==='base'||mode==='play')){e.preventDefault();ac();if(mode==='wait')rulerReset();hit(e.timeStamp);}});
 $('rulerBtn').onclick=()=>{if(mode!=='wait')return;startRuler();};
