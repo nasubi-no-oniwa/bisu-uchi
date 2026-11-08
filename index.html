@@ -160,7 +160,7 @@ const gradeI=n=>{let i=0;while(i<GR_AT.length&&n>=GR_AT[i])i++;return i;};
 
 // ===== ことば（日本語・英語・繁体中文・韓国語） =====
 const TX={
-ja:{hud:'ビス打ち職人',machineBig:'正確すぎる',machineSub:'機械で打った？ この回は記録しません',machineNote:'正確すぎて機械あつかい。この回は記録されません',postMachine:'ビスを{n}本打ったら、正確すぎて機械あつかいされた。',sentOut:'ランキングに載りました（100位より下）',ttlFmt:'称号「{g}」',title:'ビス打ち<em>職人</em><small>BISU-UCHI SHOKUNIN</small>',
+ja:{hud:'ビス打ち職人',sent2:'ランキングに載りました（今日 {d}・全期間 {a}）',rankN:'{r}位',rankOut:'100位より下',machineBig:'正確すぎる',machineSub:'機械で打った？ この回は記録しません',machineNote:'正確すぎて機械あつかい。この回は記録されません',postMachine:'ビスを{n}本打ったら、正確すぎて機械あつかいされた。',sentOut:'ランキングに載りました（100位より下）',ttlFmt:'称号「{g}」',title:'ビス打ち<em>職人</em><small>BISU-UCHI SHOKUNIN</small>',
  how:'1本目と2本目を、<b>好きな間隔</b>で打つ。<br>あとはその間隔のまま、ひたすら打ち続ける。<br><b>0.05秒</b>ずれたら、ビスが曲がって終わり。',
  how2:'画面下のボタンか、スペースキーで打つ。間隔は0.4〜3秒のあいだで決めてね。',
  name:'職人の名前（12文字まで）',anon:'名無しの職人',start:'現場に入る',rank:'ランキング',best:'自己ベスト',none:'まだなし',
@@ -178,7 +178,7 @@ ja:{hud:'ビス打ち職人',machineBig:'正確すぎる',machineSub:'機械で�
  rename:'この名前でランキングに載せる',renamed:'名前を変えました',needname:'名前を入れてね',badname:'その名前は使えません',
  again:'もう一回',xpost:'Xに投稿',top:'タイトルへ',today:'今日',alltime:'全期間',rkNote:'打った本数が多い順',loading:'読み込み中…',empty:'まだ誰もいません',rankerr:'ランキングを読み込めませんでした',rulerRow:'定規を使った職人',rulerMark:'定規',people:'{n}人',
  ogp1:'ビス打ち職人',ogp2:'同じ間隔で、打ち続けろ。',ogp3:'0.05秒ずれたら、曲がる。'},
-en:{hud:'SCREW MASTER',machineBig:'Too precise',machineSub:'A machine? This run won\'t be recorded',machineNote:'So precise you were treated as a machine. This run is not recorded.',postMachine:'I drove {n} screws so precisely I got treated as a machine.',sentOut:'You\'re on the ranking (below #100)',ttlFmt:'Title: {g}',title:'SCREW<em>MASTER</em><small>ビス打ち職人</small>',
+en:{hud:'SCREW MASTER',sent2:'You\'re on the ranking (Today {d} / All time {a})',rankN:'#{r}',rankOut:'below #100',machineBig:'Too precise',machineSub:'A machine? This run won\'t be recorded',machineNote:'So precise you were treated as a machine. This run is not recorded.',postMachine:'I drove {n} screws so precisely I got treated as a machine.',sentOut:'You\'re on the ranking (below #100)',ttlFmt:'Title: {g}',title:'SCREW<em>MASTER</em><small>ビス打ち職人</small>',
  how:'Drive the 1st and 2nd screws at <b>any interval you like</b>.<br>Then keep driving screws at that exact interval, forever.<br>Off by <b>0.05s</b> and the screw bends. Game over.',
  how2:'Tap the button at the bottom, or press Space. Pick an interval between 0.4 and 3 seconds.',
  name:'Your name (up to 12)',anon:'Nameless carpenter',start:'Go to the site',rank:'Ranking',best:'Best',none:'none yet',
@@ -196,7 +196,7 @@ en:{hud:'SCREW MASTER',machineBig:'Too precise',machineSub:'A machine? This run 
  rename:'Use this name on the ranking',renamed:'Name changed',needname:'Enter a name',badname:'That name can\'t be used',
  again:'Again',xpost:'Post to X',top:'Title',today:'Today',alltime:'All time',rkNote:'Most screws first',loading:'Loading…',empty:'No one yet',rankerr:'Could not load the ranking',rulerRow:'Used a ruler',rulerMark:'Ruler',people:'{n}',
  ogp1:'SCREW MASTER',ogp2:'Same interval. Forever.',ogp3:'Off by 0.05s, it bends.'},
-zh:{hud:'ビス打ち職人',machineBig:'太精準了',machineSub:'是機器鎖的嗎？這次不列入紀錄',machineNote:'太精準，被當成機器了。這次不列入紀錄',postMachine:'鎖了{n}根螺絲，結果太精準被當成機器了。',sentOut:'上榜了（100名以後）',ttlFmt:'稱號「{g}」',title:'ビス打ち<em>職人</em><small>鎖螺絲職人</small>',
+zh:{hud:'ビス打ち職人',sent2:'上榜了（今天 {d}・全部 {a}）',rankN:'第{r}名',rankOut:'100名以後',machineBig:'太精準了',machineSub:'是機器鎖的嗎？這次不列入紀錄',machineNote:'太精準，被當成機器了。這次不列入紀錄',postMachine:'鎖了{n}根螺絲，結果太精準被當成機器了。',sentOut:'上榜了（100名以後）',ttlFmt:'稱號「{g}」',title:'ビス打ち<em>職人</em><small>鎖螺絲職人</small>',
  how:'第1根和第2根螺絲，用<b>你喜歡的間隔</b>鎖下去。<br>之後就用那個間隔，一直鎖下去。<br>差了<b>0.05秒</b>，螺絲就會歪掉，遊戲結束。',
  how2:'按畫面下方的按鈕或空白鍵來鎖。間隔請在0.4〜3秒之間。',
  name:'職人的名字（12字以內）',anon:'無名職人',start:'進入工地',rank:'排行榜',best:'個人最佳',none:'還沒有',
@@ -214,7 +214,7 @@ zh:{hud:'ビス打ち職人',machineBig:'太精準了',machineSub:'是機器鎖�
  rename:'用這個名字上榜',renamed:'已更改名字',needname:'請輸入名字',badname:'不能使用這個名字',
  again:'再一次',xpost:'發到 X',top:'回標題',today:'今天',alltime:'全部',rkNote:'鎖的根數多的在前',loading:'讀取中…',empty:'還沒有人',rankerr:'無法讀取排行榜',rulerRow:'用了尺的職人',rulerMark:'尺',people:'{n}人',
  ogp1:'鎖螺絲職人',ogp2:'用同樣的間隔，一直鎖。',ogp3:'差0.05秒，就歪了。'},
-ko:{hud:'ビス打ち職人',machineBig:'너무 정확하다',machineSub:'기계로 박았어? 이번 기록은 남기지 않아요',machineNote:'너무 정확해서 기계 취급. 이번 기록은 남지 않아요',postMachine:'나사를 {n}개 박았더니 너무 정확해서 기계 취급을 받았다.',sentOut:'랭킹에 올랐어요 (100위 밖)',ttlFmt:'칭호 「{g}」',title:'ビス打ち<em>職人</em><small>나사 박기 장인</small>',
+ko:{hud:'ビス打ち職人',sent2:'랭킹에 올랐어요 (오늘 {d} · 전체 {a})',rankN:'{r}위',rankOut:'100위 밖',machineBig:'너무 정확하다',machineSub:'기계로 박았어? 이번 기록은 남기지 않아요',machineNote:'너무 정확해서 기계 취급. 이번 기록은 남지 않아요',postMachine:'나사를 {n}개 박았더니 너무 정확해서 기계 취급을 받았다.',sentOut:'랭킹에 올랐어요 (100위 밖)',ttlFmt:'칭호 「{g}」',title:'ビス打ち<em>職人</em><small>나사 박기 장인</small>',
  how:'1번째와 2번째 나사를 <b>원하는 간격</b>으로 박는다.<br>그다음은 그 간격 그대로 계속 박는다.<br><b>0.05초</b> 어긋나면 나사가 휘어서 끝.',
  how2:'화면 아래 버튼이나 스페이스 키로 박아요. 간격은 0.4〜3초 사이로 정하세요.',
  name:'장인 이름 (12자까지)',anon:'이름 없는 장인',start:'현장에 들어가기',rank:'랭킹',best:'최고 기록',none:'아직 없음',
@@ -491,7 +491,7 @@ let sendState={};
 async function submit(){const n=G.n,iv=G.iv;const nb=!bestN||n>bestN;if(nb){bestN=n;ls.set('bu_best',bestN);}
  sendState={msg:'',cls:'',canRename:false};const run=G;
  const setMsg=(m,c)=>{sendState.msg=m;sendState.cls=c;if(!$('result').hidden&&resKind==='run'&&G===run){$('sendMsg').textContent=m;$('sendMsg').className='note '+c;}};
- if(PV){setMsg(t('sent',{r:1}),'ok');sendState.canRename=true;return;}
+ if(PV){setMsg(t('sent2',{d:rankTxt(1),a:rankTxt(1)}),'ok');sendState.canRename=true;return;}
  setMsg(t('sending'),'');
  try{const st=await run.ticket;if(st==null){setMsg(t('offline'),'err');return;}
   const a=await fbAuth();const rec={n:myName(),s:n,st,iv,v:1,t:{'.sv':'timestamp'}};const dk=dayKey(Date.now());const recD={...rec,dk,ds:dk*DS+n};run.sent={rec,recD};
@@ -501,7 +501,7 @@ async function submit(){const n=G.n,iv=G.iv;const nb=!bestN||n>bestN;if(nb){best
   if(okD){const res=await PUT(DB('d/scores/'+a.uid)+QA(a),recD);if(res.ok)run.sent.d=1;}
   if(okAll){const res=await PUT(DB('all/scores/'+a.uid)+QA(a),rec);if(res.ok)run.sent.all=1;}
   if(!run.sent.d&&!run.sent.all){setMsg(okAll||okD?t('senderr'):t('notbetter'),okAll||okD?'err':'');return;}
-  sendState.canRename=true;const rk=await myRank(run.sent.d?'d':'all',a.uid);setMsg(rk?t('sent',{r:rk}):t('sentOut'),'ok');
+  sendState.canRename=true;const [rd,ra]=await Promise.all([myRank('d',a.uid),myRank('all',a.uid)]);setMsg(t('sent2',{d:rankTxt(rd),a:rankTxt(ra)}),'ok');
   if(!$('result').hidden&&resKind==='run'&&G===run&&!ls.get('bu_name','')){$('rName').hidden=false;$('renameBtn').hidden=false;}
  }catch(e){console.warn(e);setMsg(t('senderr'),'err');}}
 $('renameBtn').onclick=async()=>{const nm=$('rName').value.trim(),m=$('sendMsg');const r=G;
@@ -517,6 +517,7 @@ async function loadBoard(board){const today=dayKey(Date.now());
  const url=board==='d'?DB('d/scores')+'.json?orderBy=%22ds%22&startAt='+(today*DS)+'&endAt='+(today*DS+DS-1)+'&limitToLast='+TOPN:DB('all/scores')+'.json?orderBy=%22s%22&limitToLast='+TOPN;
  const [d,h]=await Promise.all([fetch(url).then(r=>{if(!r.ok)throw 0;return r.json()}),fetch(DB('hidden')+'.json').then(r=>r.ok?r.json():null).catch(()=>null)]);
  return Object.entries(d||{}).map(([id,v])=>({...v,id})).filter(r=>!(h&&h[r.id])&&typeof r.s==='number').sort((a,b)=>b.s-a.s||a.t-b.t);}
+const rankTxt=r=>r?t('rankN',{r}):t('rankOut');
 async function myRank(board,uid){try{const rows=await loadBoard(board);const i=rows.findIndex(r=>r.id===uid);return i>=0?i+1:null;}catch(e){return null;}}
 let rankFrom=false;
 const rowH=(r,i,me)=>'<tr'+(me?' class="me"':'')+'><td class="r">'+(i+1)+'</td><td class="n">'+esc(r.n)+'<br><small style="color:var(--sub);font-size:11px">'+esc(grade(r.s))+(typeof r.iv==='number'?' ・ '+esc(t('ivLine',{s:fs2(r.iv)})):'')+'</small></td><td class="c">'+r.s+esc(t('hon'))+'</td></tr>';
