@@ -403,7 +403,7 @@ function drive(x,bent,q){toolX=x;toolXT=x;lift=.11;liftT=.0;spinV=bent?0:90;cons
  if(bent)sBend();else sDrive(q);try{navigator.vibrate&&navigator.vibrate(bent?[60,40,120]:12);}catch(e){}
  setTimeout(()=>{liftT=.13;if(!bent){toolXT=x+S;cxT=x+S;}},110);return s;}
 function judge(e){const a=Math.abs(e);const el=$('hudErr');const w=a<=10?'j1':a<=25?'j2':'j3';el.className=a<=25?'g':'y';el.innerHTML=(e>=0?'+':'−')+fs3(a)+'<small>'+esc(t(w))+'</small>';$('gMark').style.left=(50+clamp(e/TOL,-1.15,1.15)*50)+'%';}
-function fail(e,x){mode='fail';mT=0;G.err=e;btnOn(false);drive(x,true);shake=.06;flinch=1;lean=1;
+function fail(e,x){mode='fail';mT=0;G.err=e;G.fx=x;btnOn(false);drive(x,true);shake=.06;flinch=1;lean=1;
  const el=$('hudErr');el.className='r';el.innerHTML=(e>=0?'+':'−')+fs3(Math.abs(e))+'<small>'+esc(t(e<0?'early':'late'))+'</small>';$('gMark').style.left=(50+clamp(e/TOL,-1.25,1.25)*50)+'%';
  cap('');big(t('bent'));}
 function failUpdate(){if(mT>=1.8)showResult('run');}
@@ -521,9 +521,9 @@ let last=performance.now();
 function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,Math.max(0,(now-last)/1000));last=now;mT+=dt;
  if(mode==='title'){const a=now/1000*.15;camPT.set(cx+Math.sin(a)*3.2,1.9,Math.cos(a)*3.2+.4);camLT.set(cx,1.05,-.2);camK=1.5;}
  else if(mode==='wait'||mode==='base'||mode==='play'){camFollow(G.iv>1500?.4:0);camK=7;if(mode==='play')playUpdate(now);else if(mode==='base')baseUpdate(now);}
- else if(mode==='fail'){camPT.set(G.lastX+.25,1.2,portrait?1.25:.95);camLT.set(G.lastX-.05,PT,0);camK=3;failUpdate();}
+ else if(mode==='fail'){const fx=G.fx==null?G.lastX:G.fx;camPT.set(fx-.35,1.12,portrait?1.15:.9);camLT.set(fx-.12,PT+.03,0);camK=3;failUpdate();}
  else if(mode==='ruler'){camFollow(.8);camK=2.5;rulerUpdate();}
- else if(mode==='result'){const a=now/1000*.12;camPT.set(cx+Math.sin(a)*2.6,1.7,Math.cos(a)*2.6+.6);camLT.set(cx-.4,1,0);camK=1;}
+ else if(mode==='result'){const a=Math.sin(now/1000*.25)*.6;camPT.set(cx+Math.sin(a)*3.2,1.9,Math.cos(a)*3.2+.3);camLT.set(cx-.3,1.0,-.1);camK=1.2;}
  pose(dt);stepScrews(dt);camStep(dt);R.render(SC,CAM);}
 
 // ===== はじめ =====
