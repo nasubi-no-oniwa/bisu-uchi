@@ -359,7 +359,7 @@ function clearScrews(){SCREWS.forEach(s=>s.g.visible=false);MARKS.forEach(m=>m.v
 
 // ===== カメラ =====
 const camP=new THREE.Vector3(1,2,3),camL=new THREE.Vector3(),camPT=new THREE.Vector3(),camLT=new THREE.Vector3();let camK=4,shake=0;
-function camFollow(far){far=far||0;if(portrait){camPT.set(cx+.95+far*.5,2.25+far*.4,2.6+far);camLT.set(cx-.75,PT+.1,-.1);}else{camPT.set(cx+.9+far*.4,1.75+far*.4,2.3+far);camLT.set(cx-.5,PT+.12,-.1);}}
+function camFollow(far){far=far||0;if(portrait){camPT.set(cx+1.0+far*.5,2.25+far*.4,2.7+far);camLT.set(cx-.55,PT+.12,-.1);}else{camPT.set(cx+.9+far*.4,1.75+far*.4,2.3+far);camLT.set(cx-.5,PT+.12,-.1);}}
 function camStep(dt){const a=1-Math.exp(-dt*camK);camP.lerp(camPT,a);camL.lerp(camLT,a);CAM.position.copy(camP);if(shake>0){CAM.position.x+=(Math.random()-.5)*shake;CAM.position.y+=(Math.random()-.5)*shake;shake*=Math.exp(-dt*8);if(shake<.002)shake=0;}CAM.lookAt(camL);}
 
 // ===== 画面 =====
@@ -520,7 +520,7 @@ $('rankBack').onclick=()=>{if(rankFrom){show('result');}else showTitle();};
 let last=performance.now();
 function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,Math.max(0,(now-last)/1000));last=now;mT+=dt;
  if(mode==='title'){const a=now/1000*.15;camPT.set(cx+Math.sin(a)*3.2,1.9,Math.cos(a)*3.2+.4);camLT.set(cx,1.05,-.2);camK=1.5;}
- else if(mode==='wait'||mode==='base'||mode==='play'){camFollow(G.iv>1500?.4:0);camK=4;if(mode==='play')playUpdate(now);else if(mode==='base')baseUpdate(now);}
+ else if(mode==='wait'||mode==='base'||mode==='play'){camFollow(G.iv>1500?.4:0);camK=7;if(mode==='play')playUpdate(now);else if(mode==='base')baseUpdate(now);}
  else if(mode==='fail'){camPT.set(G.lastX+.25,1.2,portrait?1.25:.95);camLT.set(G.lastX-.05,PT,0);camK=3;failUpdate();}
  else if(mode==='ruler'){camFollow(.8);camK=2.5;rulerUpdate();}
  else if(mode==='result'){const a=now/1000*.12;camPT.set(cx+Math.sin(a)*2.6,1.7,Math.cos(a)*2.6+.6);camLT.set(cx-.4,1,0);camK=1;}
