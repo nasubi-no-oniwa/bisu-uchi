@@ -16,7 +16,7 @@ ex('ログインなしで打ちはじめる',await req('PUT','bisu/runs/'+U,null
 let tk=await ticket(U);ex('打ちはじめた時刻を書く',tk.r,true);
 const tk2=await ticket(U2);
 ex('ほかの人の場所に書く',await req('PUT','bisu/runs/'+U,U2,{t:TS}),false);
-ex('すぐにもう一度書く',await req('PUT','bisu/runs/'+U,U,{t:TS}),false);
+await sleep(150);tk=await ticket(U);ex('打ちなおしてすぐ（0.15秒後）の時刻も書ける',tk.r,true);
 ex('まだ打っている途中に40本の記録を送る',await req('PUT','bisu/all/scores/'+U,U,rec(tk.st,40)),false);
 await sleep(5200);
 ex('打ちはじめた時刻がちがう記録',await req('PUT','bisu/all/scores/'+U,U,rec(tk.st-5000,10)),false);

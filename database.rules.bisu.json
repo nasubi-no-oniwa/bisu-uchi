@@ -1,7 +1,7 @@
 {
   "runs": {
     "$uid": {
-      ".write": "auth != null && auth.uid === $uid && newData.exists() && (!data.exists() || now - data.child('t').val() >= 2000)",
+      ".write": "auth != null && auth.uid === $uid && newData.exists() && (!data.exists() || now - data.child('t').val() >= 100)",
       ".validate": "newData.hasChildren(['t'])",
       "t": {
         ".validate": "newData.val() === now"

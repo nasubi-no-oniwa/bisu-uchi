@@ -6,8 +6,16 @@ const list = JSON.parse(fs.readFileSync('tools/manual-records.json', 'utf8'));
 const tk = await token();
 const today = Math.floor((Date.now() + 32400000) / 86400000);
 const get = async p => JSON.parse(await api('GET', p, undefined, tk));
+// 名前と本数がおなじ記録の持ち主をさがす（match があれば本人の記録を書きかえる）
+const owners = async (n, sc) => Object.entries((await get('/bisu/all/scores.json?orderBy=%22s%22&equalTo=' + sc)) || {}).filter(([k, v]) => v.n === n).map(([k]) => k);
 for (const r of list) {
   if (!r.id || !r.n || !(r.s >= 3) || !(r.iv >= 400 && r.iv <= 3000)) { console.log('とばす（中身がおかしい）', JSON.stringify(r)); continue; }
+  if (r.match) {
+    let ids = await owners(r.match.n, r.match.s);
+    if (!ids.length) ids = await owners(r.n, r.s);
+    if (ids.length === 1) { console.log('本人の記録を見つけました', r.n); r.id = ids[0]; }
+    else console.log('本人の記録が', ids.length, '件なので、別の行として入れます', r.n);
+  }
   const [y, m, d] = r.date.split('-').map(Number);
   const dk = Date.UTC(y, m - 1, d) / 86400000;
   const rec = { n: String(r.n).slice(0, 12), s: r.s, st: Date.now() - (r.s - 1) * r.iv - 2000, iv: r.iv, v: 1, t: { '.sv': 'timestamp' } };
