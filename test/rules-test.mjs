@@ -50,5 +50,16 @@ ex('定規を使った人の数を読める',await req('GET','bisu/ruler',null),
 ex('ほかの人の打ちはじめの時刻は読めない',await req('GET','bisu/runs/'+U,U2),false);
 ex('hidden に書く',await req('PUT','bisu/hidden/'+U,U,true),false);
 ex('ほかのゲームの場所に書く',await req('PUT','sumo/quit/'+U,U,{t:TS}),false);
+// 人数カウンターの試験
+{const INC={'.sv':{increment:1}};
+ex('ruler: はじめてで数を増やす',await req('PATCH','bisu','cnt0axxxxxxxxxxxxxxxx',{['ruler/'+'cnt0axxxxxxxxxxxxxxxx']:{t:TS},'rulerc':INC,'rulert':{dk:dk(),n:1}}),true);
+ex('ruler: 記録なしで数だけ増やす',await req('PUT','bisu/rulerc','cnt0byyyyyyyyyyyyyyyy',5),false);
+await sleep(2100);
+ex('ruler: 2回目で全期間を増やす',await req('PATCH','bisu','cnt0axxxxxxxxxxxxxxxx',{['ruler/'+'cnt0axxxxxxxxxxxxxxxx']:{t:TS},'rulerc':INC}),false);
+ex('ruler: ほかの人のはじめて',await req('PATCH','bisu','cnt0byyyyyyyyyyyyyyyy',{['ruler/'+'cnt0byyyyyyyyyyyyyyyy']:{t:TS},'rulerc':INC,'rulert/n':INC}),true);
+ex('ruler: 今日の数を1にもどす',await req('PATCH','bisu','cnt0czzzzzzzzzzzzzzzz',{['ruler/'+'cnt0czzzzzzzzzzzzzzzz']:{t:TS},'rulerc':INC,'rulert':{dk:dk(),n:1}}),false);
+ex('ruler: ちがう日で書く',await req('PATCH','bisu','cnt0czzzzzzzzzzzzzzzz',{['ruler/'+'cnt0czzzzzzzzzzzzzzzz']:{t:TS},'rulerc':INC,'rulert':{dk:dk()-1,n:1}}),false);
+{const c=await req('GET','bisu/rulerc',null),z=await req('GET','bisu/rulert',null);if(c.j!==2||!z.j||z.j.n!==2){fail++;console.log('NG  ruler: 数が合いません',c.j,JSON.stringify(z.j));}else console.log('OK  ruler: 全期間2・今日2');}
+}
 console.log(fail?('失敗 '+fail+' 件'):'すべて合格');
 if(fail)process.exit(1);
