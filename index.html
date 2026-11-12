@@ -501,7 +501,11 @@ function postText(){return (resKind==='ruler'?t('postRuler'):resKind==='machine'
 // 結果ごとのページ（s/本数.html）。リンクに「〇本打てた」の画像が出て、人が開くとゲームへ移る
 const SHARE_MAX=300,SHARE_PLUS=[300,400,500,700,1000,1500,2000,3000,5000,10000];
 function shareURL(){if(resKind==='machine')return GAME_URL;const S2=GAME_URL+'s/'+(lang==='ja'?'':'en/');if(resKind==='ruler')return S2+'ruler.html';const n=Math.max(0,G.n|0);if(n<=SHARE_MAX)return S2+n+'.html';let m=SHARE_PLUS[0];for(const k of SHARE_PLUS)if(n>=k)m=k;return S2+m+'p.html';}
-$('xBtn').onclick=()=>{const u='https://x.com/intent/post?text='+encodeURIComponent(postText())+'&url='+encodeURIComponent(shareURL());const w=window.open(u,'_blank');if(!w)location.href=u;};
+// Xの投稿で引用するツイート（なすびのお庭の管理ページ quote/ で日本語・英語を貼りかえられる）
+let QUOTE={};fetch('https://ft-red-default-rtdb.asia-southeast1.firebasedatabase.app/xquote/g/bisu-uchi.json').then(r=>r.json()).then(d=>{if(d&&typeof d==='object')QUOTE=d;}).catch(()=>{});
+function quoteURL(){const u=(lang==='ja'?QUOTE.ja:QUOTE.en)||'';return /^https:\/\/x\.com\/[A-Za-z0-9_]{1,15}\/status\/\d{5,25}$/.test(u)?u:'';}
+function xIntent(text,url){const q=quoteURL();return 'https://x.com/intent/post?text='+encodeURIComponent(q?text+'\n'+url:text)+'&url='+encodeURIComponent(q||url);}
+$('xBtn').onclick=()=>{const u=xIntent(postText(),shareURL());const w=window.open(u,'_blank');if(!w)location.href=u;};
 
 // ===== ランキング（Firebase：ft-green の bisu の下） =====
 const FB={apiKey:'AIzaSyCfCUAY7vhCFVF58tGOQzLCQsfPhp-Qi1A',databaseURL:'https://ft-green-default-rtdb.asia-southeast1.firebasedatabase.app'};
